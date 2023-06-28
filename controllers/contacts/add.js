@@ -1,14 +1,10 @@
 const {Contact} = require('../../models/contact');
-const {schemas} = require('../../schemas/schemas');
 
-const addContact = async (req, res, next) => {
-    try {
-        const { error } = schemas.addSchema.validate(req.body);
-        if (error) {
-            error.status = 400;
-            throw error;
-        }
-        const result = await Contact.create(req.body);
+const addContact = async (req, res) => {
+   
+    const { _id: owner } = req.user; 
+        
+        const result = await Contact.create({...req.body, owner});
         res.status(201).json({
             status: 'success',
             code: 201,
@@ -16,9 +12,6 @@ const addContact = async (req, res, next) => {
                 result,
             },
         });
-    } catch (error) {
-        next(error);
-    }
 };
 
 module.exports = addContact;
