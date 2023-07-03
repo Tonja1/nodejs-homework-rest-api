@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const { user: ctrl } = require('../../controllers');
-const { validation, authentic } = require('../../middlewares');
+const { validation, authentic, upload } = require('../../middlewares');
 const { schemas } = require('../../models/user');
 const ctrlWrapper = require('../../helpers/ctrlWrapper');
 
 router.get('/current', authentic, ctrlWrapper(ctrl.getCurrent));
 
 router.patch('/', authentic, validation(schemas.subscriptionSchema), ctrlWrapper(ctrl.updateSubscription));
+
+router.patch('/avatars', authentic, upload.single('avatar'), ctrlWrapper(ctrl.updateAvatar));
 
 module.exports = router;
